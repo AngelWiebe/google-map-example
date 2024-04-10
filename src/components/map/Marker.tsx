@@ -1,4 +1,4 @@
-import { Stack } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 
 import { Pin } from './Pin';
 import './Marker.scss';
@@ -8,16 +8,17 @@ interface MarkerProps {
   key: string;
   lat: number;
   lng: number;
+  onClick: () => void;
 }
 
 export default function Marker(props: MarkerProps) {
-  const {count, key} = props;
+  const {count, key, onClick} = props;
   
     return (
       <Stack className='map-marker' key={key}>
         <Stack className='map-marker__marker'>
-          <Pin />
-          {count}
+          <Pin/>
+          <Typography onClick={onClick}>{count}</Typography>
         </Stack>
       </Stack>
     );

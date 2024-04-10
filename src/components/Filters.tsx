@@ -28,7 +28,7 @@ export default function Filters(props: FilterProps) {
   }
 
   return (
-    <Stack flexDirection="row">
+    <Stack flexDirection="row" flexWrap="wrap">
       {
         selectedCategories.map((category: string) => 
           <Typography onClick={() => onCheckboxClick(category)}>{category}<DeleteIcon /></Typography>

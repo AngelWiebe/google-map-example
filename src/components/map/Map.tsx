@@ -3,21 +3,23 @@ import GoogleMap from "google-maps-react-markers";
 import { Stack } from "@mui/material";
 
 import Marker from "./Marker";
-import { Therapist } from "../interfaces/therapist";
+import { Therapist } from "../../interfaces/therapist";
+import { Coordinates } from "../../interfaces/coordinates";
 
 interface MapProps {
   therapistData: Therapist[];
+  center: Coordinates,
+  setCenter: (arg0: Coordinates) => void,
 }
 
 export default function Map(props: MapProps) {
-  const { therapistData } = props;
+  const { therapistData, center, setCenter } = props;
   const apiKey = import.meta.env.VITE_REACT_APP_GOOGLE_API_KEY || "";
   const mapRef = useRef(null)
 
   /**
    * @description This function is called when the map is ready
    * @param {Object} map - reference to the map instance
-   * @param {Object} maps - reference to the maps library
    */
   const onGoogleApiLoaded = ({ map }: any) => {
     mapRef.current = map
@@ -28,15 +30,19 @@ export default function Map(props: MapProps) {
       <div style={{ height: "100vh", width: "100vh" }}>
         <GoogleMap
           apiKey={apiKey}
-          defaultCenter={{ lat: 51.049999, lng: -114.066666 }}
+          defaultCenter={center}
           defaultZoom={10}
           onGoogleApiLoaded={onGoogleApiLoaded}
           ref={mapRef}
+          options={{
+            'center': center // TODO: figure out why this never changes
+          }}
         >
           {therapistData.map((data: Therapist, index: number) => 
             <Marker
+              onClick={() => setCenter({lat:Number(data.lat), lng: Number(data.lng)})}
               count={index+1}
-              key={data.id}
+              key={`inner-map-pin-${data.id}}`}
               lat={Number(data.lat)}
               lng={Number(data.lng)}
             />

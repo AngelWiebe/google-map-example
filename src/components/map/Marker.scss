@@ -1,0 +1,19 @@
+.google-map-markers-overlay {
+    .map-marker {
+        cursor: pointer;
+        width: 30px;
+        height: 45px;
+        position: relative;
+        top: -45px;
+        left: -15px;
+
+        .MuiTypography-root {
+            z-index: 1000;
+            position: absolute;
+            color: black;
+            left: 10px;
+            top: 7px;
+            font-weight: bold;
+        }
+    }
+}
