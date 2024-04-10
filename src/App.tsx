@@ -9,6 +9,8 @@ import Map from "./components/Map"
 
 function App() {
   const [loadedData, setLoadedData] = useState<Therapist[]>([]);
+  const [filteredData, setFilteredData] = useState<Therapist[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
   useEffect(() => {
     const csvData: Therapist[] = [];
@@ -24,10 +26,30 @@ function App() {
     });
   }, []);
 
+  //TODO: uniquify
+  useEffect(() => {
+    if (selectedCategories.length < 1) {
+      setFilteredData(loadedData);
+      return;
+    }
+
+    let filteredCatIds = new Set();
+    let filteredCats = [];
+    for (const data of loadedData) {
+      for (const cat of selectedCategories) {
+        if (data.category_name.includes(cat) && !filteredCatIds.has(data.id)) {
+          filteredCatIds.add(data.id);
+          filteredCats.push(data);
+        }
+      }
+    }
+    setFilteredData(filteredCats);
+  }, [selectedCategories, loadedData])
+
   return (
     <Stack flexDirection="row" justifyContent="space-evenly" marginTop={2}>
-      <Search therapistData={loadedData} />
-      <Map therapistData={loadedData} />
+      <Search therapistData={loadedData} selectedCategories={selectedCategories} setSelectedCategories={setSelectedCategories} />
+      <Map therapistData={filteredData} />
     </Stack>
   )
 }

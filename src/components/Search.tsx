@@ -1,18 +1,24 @@
 import { useState, useEffect } from "react";
-import { Typography, TextField, Checkbox, Stack, FormControlLabel } from "@mui/material";
+import { Typography, TextField, Checkbox, Stack, FormControlLabel, Grid } from "@mui/material";
 
 import { Therapist } from "../interfaces/therapist";
+import Filters from "./Filters";
 
-interface MapProps {
+interface SearchProps {
   therapistData: Therapist[];
+  selectedCategories: string[];
+  setSelectedCategories: (selectedCategories: string[]) => void;
 }
 
-export default function Search(props: MapProps) {
-  const { therapistData } = props;
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  let categories = therapistData
-    .flatMap(obj => obj.category_name.split(','));
-  categories = Array.from(new Set(categories));
+export default function Search(props: SearchProps) {
+  const { therapistData, selectedCategories, setSelectedCategories } = props;
+  const [address, setAddress] = useState<string>('');
+  const [availableCategories, setAvailableCategories] = useState<string[]>([]);
+
+  useEffect(() => {
+    const cats = therapistData.flatMap(obj => obj.category_name.split(','));
+    setAvailableCategories(Array.from(new Set(cats)));
+  }, [therapistData]);
   
   const isSelected = (category: string) => {
     return selectedCategories.indexOf(category) > -1;
@@ -28,18 +34,19 @@ export default function Search(props: MapProps) {
     }
   }
 
-  const [address, setAddress] = useState<string>('');
-
-  console.log('cats', categories);
   return (
-    <Stack>
+    <Stack paddingRight={3} paddingLeft={3}>
       <Typography marginBottom={2}>Enter your address to find resources near you:</Typography>
       <TextField onChange={(e) => setAddress(e.target.value)} value={address} />
-      <Stack>
-        {categories.map((category: string) => 
-          <FormControlLabel control={<Checkbox checked={isSelected(category)} onClick={() => onCheckboxClick(category)} />} label={category} />
+      <Filters selectedCategories={selectedCategories} setSelectedCategories={setSelectedCategories} />
+      <Grid container>
+        {
+          availableCategories.map((category: string) => 
+            <Grid item xs={6}>
+              <FormControlLabel control={<Checkbox checked={isSelected(category)} onClick={() => onCheckboxClick(category)} />} label={category} />
+            </Grid>
         )}
-      </Stack>
+      </Grid>
     </Stack>
   );
 }
