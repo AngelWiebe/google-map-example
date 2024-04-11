@@ -5,17 +5,17 @@ import './Marker.scss';
 
 interface MarkerProps {
   count: number;
-  key: string;
+  id: string;
   lat: number;
   lng: number;
   onClick: () => void;
 }
 
 export default function Marker(props: MarkerProps) {
-  const {count, key, onClick} = props;
+  const {count, id, onClick} = props;
   
     return (
-      <Stack className='map-marker' key={key}>
+      <Stack className='map-marker' key={id}>
         <Stack className='map-marker__marker'>
           <Pin/>
           <Typography onClick={onClick}>{count}</Typography>

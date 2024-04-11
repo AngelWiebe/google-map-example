@@ -54,7 +54,8 @@ button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
-
-input {
-  background-color: rgba(255, 255, 255, 0.87);
+input.MuiOutlinedInput-input {
+  background: lightgray;
+  padding: 10px;
+  margin: 5px;
 }

@@ -8,16 +8,16 @@ import { Coordinates } from "./interfaces/coordinates";
 import Search from "./components/Search";
 import Map from "./components/map/Map"
 import DetailCards from "./components/DetailCards";
-
-const DEFAULT_COORDS = { lat: 51.049999, lng: -114.066666 };
+import { sortByDistance } from './utils';
+import { API_KEY, LIMIT, DEFAULT_COORDS } from "./constants";
 
 function App() {
   const [loadedData, setLoadedData] = useState<Therapist[]>([]);
   const [center, setCenter] = useState<Coordinates>(DEFAULT_COORDS);
   const [filteredData, setFilteredData] = useState<Therapist[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
-  console.log('center', center);
   useEffect(() => {
     const csvData: Therapist[] = [];
     Papa.parse(csvDataUrl, {
@@ -32,10 +32,10 @@ function App() {
     });
   }, []);
 
-  //TODO: uniquify
   useEffect(() => {
     if (selectedCategories.length < 1) {
-      setFilteredData(loadedData);
+      const sorted = sortByDistance(center, loadedData).splice(0, LIMIT);
+      setFilteredData(sorted);
       return;
     }
 
@@ -49,13 +49,29 @@ function App() {
         }
       }
     }
-    setFilteredData(filteredCats);
-  }, [selectedCategories, loadedData])
+
+    if (filteredCats.length < 1) {
+      setError('No resources match the selected parameters');
+      setFilteredData([]);
+      return;
+    }
+
+    const sorted = sortByDistance(center, filteredCats).splice(0, LIMIT);
+    setFilteredData(sorted);
+  }, [selectedCategories, loadedData, center])
 
   return (
     <Stack flexDirection="row" justifyContent="space-evenly" marginTop={2}>
-      <Search therapistData={loadedData} selectedCategories={selectedCategories} setSelectedCategories={setSelectedCategories} />
-      <Map therapistData={filteredData} center={center} setCenter={setCenter} />
+      <Search
+        apiKey={API_KEY}
+        error={error}
+        setError={setError}
+        setCenter={setCenter}
+        selectedCategories={selectedCategories}
+        setSelectedCategories={setSelectedCategories}
+        therapistData={loadedData}
+      />
+      <Map apiKey={API_KEY} center={center} setCenter={setCenter} therapistData={filteredData} />
       <DetailCards therapistData={filteredData} setCenter={setCenter} />
     </Stack>
   )

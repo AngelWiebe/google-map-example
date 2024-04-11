@@ -1,4 +1,4 @@
-import { Typography, CardHeader, Card, CardContent, Stack } from "@mui/material";
+import { Typography, CardHeader, Card, CardContent, Stack, Link } from "@mui/material";
 
 import { Therapist } from "../interfaces/therapist";
 import { Coordinates } from "../interfaces/coordinates";
@@ -21,7 +21,7 @@ function DetailCard(props: DetailProps) {
         avatar={
           <Marker
             count={index + 1}
-            key={`$card-pin-{therapist.id}`}
+            id={`card-pin-${therapist.id}`}
             lat={Number(therapist.lat)}
             lng={Number(therapist.lng)}
             onClick={onClick}
@@ -29,10 +29,16 @@ function DetailCard(props: DetailProps) {
         }
       />
       <CardContent>
-        <Typography marginBottom={2}>{`${therapist.address}, ${therapist.city}, ${therapist.postal_code}`}</Typography>
-        <Typography marginBottom={2}>{therapist.phone}</Typography>
-        <Typography marginBottom={2}>{therapist.email}</Typography>
-        <Typography marginBottom={2}>{therapist.url}</Typography>
+        <Typography marginBottom={2}>{therapist.address}</Typography>
+        <Link marginBottom={2} display="block" target="_top" href={`tel:${therapist.phone}`} rel="noopener noreferrer">
+          {therapist.phone}
+        </Link>
+        <Link marginBottom={2} display="block" target="_top" href={`mailto:${therapist.email}`} rel="noopener noreferrer">
+          {therapist.email}
+        </Link>
+        <Link marginBottom={2} display="block" target="_blank" href={therapist.url} rel="noreferrer">
+          {therapist.url}
+        </Link>
         <Typography marginBottom={2}>{`Services Offered: ${therapist.category_name.replace(',', ', ')}`}</Typography>
       </CardContent>
     </Card>

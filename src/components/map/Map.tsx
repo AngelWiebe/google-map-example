@@ -7,14 +7,14 @@ import { Therapist } from "../../interfaces/therapist";
 import { Coordinates } from "../../interfaces/coordinates";
 
 interface MapProps {
+  apiKey: string;
   therapistData: Therapist[];
   center: Coordinates,
   setCenter: (arg0: Coordinates) => void,
 }
 
 export default function Map(props: MapProps) {
-  const { therapistData, center, setCenter } = props;
-  const apiKey = import.meta.env.VITE_REACT_APP_GOOGLE_API_KEY || "";
+  const { therapistData, center, setCenter, apiKey } = props;
   const mapRef = useRef(null)
 
   /**
@@ -42,7 +42,7 @@ export default function Map(props: MapProps) {
             <Marker
               onClick={() => setCenter({lat:Number(data.lat), lng: Number(data.lng)})}
               count={index+1}
-              key={`inner-map-pin-${data.id}}`}
+              id={`inner-map-pin-${data.id}}`}
               lat={Number(data.lat)}
               lng={Number(data.lng)}
             />
