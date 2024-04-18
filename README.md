@@ -28,3 +28,8 @@ export default {
 - Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
 - Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
 - Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+
+![image](https://github.com/AngeleNault91/google-map-example/assets/44734300/70472cbb-7a9e-4eab-a43a-4034d3e2f87a)
+
+![image](https://github.com/AngeleNault91/google-map-example/assets/44734300/76276af5-bfef-415a-82e2-867afcb46842)
+
