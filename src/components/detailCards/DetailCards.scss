@@ -1,0 +1,22 @@
+.Card__Container {
+    overflow-y: scroll;
+    
+    .MuiCard-root {
+        display: inline-table;
+        margin: 10px;
+        border-radius: 10px;
+
+        .MapMarker__marker {
+            position: relative;
+
+            .MuiTypography-root {
+                position: absolute;
+                top: 10%;
+                left: 50%;
+                font-weight: bold;
+                -webkit-transform: translateX(-50%);
+                transform: translateX(-50%);
+            }
+        }
+    }
+}

@@ -1,19 +1,21 @@
 .google-map-markers-overlay {
-    .map-marker {
+    .MapMarker {
         cursor: pointer;
-        width: 30px;
         height: 45px;
+        left: -15px;
         position: relative;
         top: -45px;
-        left: -15px;
+        width: 30px;
 
         .MuiTypography-root {
-            z-index: 1000;
-            position: absolute;
             color: black;
-            left: 10px;
-            top: 7px;
+            position: absolute;
+            z-index: 1000;
+            top: 10%;
+            left: 50%;
             font-weight: bold;
+            -webkit-transform: translateX(-50%);
+            transform: translateX(-50%);
         }
     }
 }
