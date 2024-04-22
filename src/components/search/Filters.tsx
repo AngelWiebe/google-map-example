@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Typography, Stack } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 
@@ -10,25 +10,31 @@ interface FilterProps {
 export default function Filters(props: FilterProps) {
   const { selectedCategories, setSelectedCategories } = props;
 
-  const deselectAll = () => {
+  const deselectAll = useCallback(() => {
     setSelectedCategories([]);
-  };
+  }, [setSelectedCategories]);
 
-  const isSelected = (category: string) => {
-    return selectedCategories.indexOf(category) > -1;
-  };
+  const isSelected = useCallback(
+    (category: string) => {
+      return selectedCategories.indexOf(category) > -1;
+    },
+    [selectedCategories]
+  );
 
-  const onCheckboxClick = (category: string) => {
-    if (isSelected(category)) {
-      setSelectedCategories(
-        selectedCategories.filter((cat) => {
-          return cat !== category;
-        })
-      );
-    } else {
-      setSelectedCategories([...selectedCategories, category]);
-    }
-  };
+  const onCheckboxClick = useCallback(
+    (category: string) => {
+      if (isSelected(category)) {
+        setSelectedCategories(
+          selectedCategories.filter((cat) => {
+            return cat !== category;
+          })
+        );
+      } else {
+        setSelectedCategories([...selectedCategories, category]);
+      }
+    },
+    [isSelected, setSelectedCategories, selectedCategories]
+  );
 
   return (
     <Stack flexDirection="row" flexWrap="wrap">

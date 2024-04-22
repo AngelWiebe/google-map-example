@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Checkbox,
   FormControlLabel,
@@ -65,21 +65,27 @@ export default function Search(props: SearchProps) {
     return () => clearTimeout(timeOutId);
   }, [query]);
 
-  const isSelected = (category: string) => {
-    return selectedCategories.indexOf(category) > -1;
-  };
+  const isSelected = useCallback(
+    (category: string) => {
+      return selectedCategories.indexOf(category) > -1;
+    },
+    [selectedCategories]
+  );
 
-  const onCheckboxClick = (category: string) => {
-    if (isSelected(category)) {
-      setSelectedCategories(
-        selectedCategories.filter((cat) => {
-          return cat !== category;
-        })
-      );
-    } else {
-      setSelectedCategories([...selectedCategories, category]);
-    }
-  };
+  const onCheckboxClick = useCallback(
+    (category: string) => {
+      if (isSelected(category)) {
+        setSelectedCategories(
+          selectedCategories.filter((cat) => {
+            return cat !== category;
+          })
+        );
+      } else {
+        setSelectedCategories([...selectedCategories, category]);
+      }
+    },
+    [selectedCategories, setSelectedCategories]
+  );
 
   return (
     <Stack padding={2} flex="1 1 0px">

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import GoogleMap from "google-maps-react-markers";
 import { Stack } from "@mui/material";
 
@@ -22,10 +22,13 @@ export default function Map(props: MapProps) {
    * @description This function is called when the map is ready
    * @param {Object} map - reference to the map instance
    */
-  const onGoogleApiLoaded = (map: any) => {
-    mapRef.current = map;
-    setMapLoaded(true);
-  };
+  const onGoogleApiLoaded = useCallback(
+    (map: any) => {
+      mapRef.current = map;
+      setMapLoaded(true);
+    },
+    [mapRef]
+  );
 
   useEffect(() => {
     if (!mapLoaded) return;
