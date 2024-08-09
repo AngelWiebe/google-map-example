@@ -1,22 +1,50 @@
 .Card__Container {
     overflow-y: scroll;
-    
-    .MuiCard-root {
-        display: inline-table;
-        margin: 10px;
-        border-radius: 10px;
+    padding: 1rem;
+    max-height: 100vh;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
 
-        .MapMarker__marker {
-            position: relative;
+.Card.MuiCard-root {
+  margin-bottom: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  min-width: 100%;
 
-            .MuiTypography-root {
-                position: absolute;
-                top: 10%;
-                left: 50%;
-                font-weight: bold;
-                -webkit-transform: translateX(-50%);
-                transform: translateX(-50%);
-            }
-        }
+  &Header {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+  }
+
+  &Content {
+    padding: 1rem;
+
+    a {
+      display: block;
+      margin-bottom: 0.5rem;
     }
+  }
+
+  .MuiCardHeader-avatar {
+    cursor: pointer;
+    height: 45px;
+    position: relative;
+    width: 30px;
+
+    .MuiTypography-root {
+        color: black;
+        position: absolute;
+        z-index: 1000;
+        top: 15%;
+        left: 50%;
+        font-weight: bold;
+        -webkit-transform: translateX(-50%);
+        transform: translateX(-50%);
+    }
+  }
 }

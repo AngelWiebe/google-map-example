@@ -8,11 +8,11 @@ import {
   Typography,
 } from "@mui/material";
 import { fromAddress, setKey } from "react-geocode";
-
 import Filters from "./Filters";
 import { DEFAULT_COORDS } from "../../constants";
 import { Coordinates } from "../../interfaces/coordinates";
 import { Therapist } from "../../interfaces/therapist";
+import "./Search.scss";
 
 interface SearchProps {
   apiKey: string;
@@ -20,26 +20,25 @@ interface SearchProps {
   selectedCategories: string[];
   setCenter: (arg0: Coordinates) => void;
   setError: (arg0: string) => void;
-  setSelectedCategories: (selectedCategories: string[]) => void;
+  setSelectedCategories: React.Dispatch<React.SetStateAction<string[]>>;
   therapistData: Therapist[];
 }
 
-export default function Search(props: SearchProps) {
-  const {
-    apiKey,
-    error,
-    selectedCategories,
-    setCenter,
-    setError,
-    setSelectedCategories,
-    therapistData,
-  } = props;
+export default function Search({
+  apiKey,
+  error,
+  selectedCategories,
+  setCenter,
+  setError,
+  setSelectedCategories,
+  therapistData,
+}: SearchProps) {
   const [availableCategories, setAvailableCategories] = useState<string[]>([]);
   const [query, setQuery] = useState<string>("");
 
   useEffect(() => {
     setKey(apiKey);
-  }, []);
+  }, [apiKey]);
 
   useEffect(() => {
     const cats = therapistData.flatMap((obj) => obj.category_name.split(","));
@@ -63,67 +62,86 @@ export default function Search(props: SearchProps) {
         });
     }, 500);
     return () => clearTimeout(timeOutId);
-  }, [query]);
+  }, [query, setCenter, setError]);
 
   const isSelected = useCallback(
-    (category: string) => {
-      return selectedCategories.indexOf(category) > -1;
-    },
+    (category: string) => selectedCategories.includes(category),
     [selectedCategories]
   );
 
   const onCheckboxClick = useCallback(
     (category: string) => {
-      if (isSelected(category)) {
-        setSelectedCategories(
-          selectedCategories.filter((cat) => {
-            return cat !== category;
-          })
-        );
-      } else {
-        setSelectedCategories([...selectedCategories, category]);
-      }
+      setSelectedCategories((prevSelected) =>
+        isSelected(category)
+          ? prevSelected.filter((cat) => cat !== category)
+          : [...prevSelected, category]
+      );
     },
-    [selectedCategories, setSelectedCategories]
+    [isSelected, setSelectedCategories]
   );
 
   return (
-    <Stack padding={2} flex="1 1 0px">
-      <Typography marginBottom={2}>
-        Enter your address to find resources near you:
-      </Typography>
-      <TextField
-        onChange={(e) => {
-          setError("");
-          setQuery(e.target.value);
-        }}
-        value={query}
-      />
-      {error && (
-        <Typography color="red" marginBottom={2} marginTop={2}>
-          {error}
+    <Stack
+      maxHeight="100vh"
+      flex="1 1 0px"
+      component="section"
+      className="Search__Container"
+      aria-labelledby="search-section"
+    >
+      <Stack padding={2} flex="1 1 0px">
+        <Typography
+          id="search-section"
+          className="Search__Label"
+          marginBottom={2}
+        >
+          Enter your address to find resources near you:
         </Typography>
-      )}
-      <Filters
-        selectedCategories={selectedCategories}
-        setSelectedCategories={setSelectedCategories}
-      />
-      <Grid container maxHeight="100vh">
-        {availableCategories.map((category: string) => (
-          <Grid item xs={6} key={category.replace(" ", "_")}>
-            <FormControlLabel
-              className="capitalize"
-              control={
-                <Checkbox
-                  checked={isSelected(category)}
-                  onClick={() => onCheckboxClick(category)}
-                />
-              }
-              label={category}
-            />
-          </Grid>
-        ))}
-      </Grid>
+        <TextField
+          aria-label="Address search"
+          onChange={(e) => {
+            setError("");
+            setQuery(e.target.value);
+          }}
+          value={query}
+          aria-describedby={error ? "address-error" : undefined}
+        />
+        {error && (
+          <Typography
+            aria-label="Address error"
+            id="address-error"
+            color="error"
+            className="Search__Error"
+            marginBottom={2}
+            marginTop={2}
+            role="alert"
+          >
+            {error}
+          </Typography>
+        )}
+        {selectedCategories.length > 0 && (
+          <Filters
+            selectedCategories={selectedCategories}
+            setSelectedCategories={setSelectedCategories}
+          />
+        )}
+        <Grid container maxHeight="100vh">
+          {availableCategories.map((category: string) => (
+            <Grid item xs={6} key={category.replace(" ", "_")}>
+              <FormControlLabel
+                className="capitalize"
+                control={
+                  <Checkbox
+                    checked={isSelected(category)}
+                    onChange={() => onCheckboxClick(category)}
+                    inputProps={{ "aria-label": category }}
+                  />
+                }
+                label={category}
+              />
+            </Grid>
+          ))}
+        </Grid>
+      </Stack>
     </Stack>
   );
 }

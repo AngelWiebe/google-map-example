@@ -1,58 +1,67 @@
 import React, { useCallback } from "react";
-import { Typography, Stack } from "@mui/material";
+import { Typography, Stack, Button } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import "./Filters.scss";
 
 interface FilterProps {
   selectedCategories: string[];
-  setSelectedCategories: (selectedCategories: string[]) => void;
+  setSelectedCategories: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-export default function Filters(props: FilterProps) {
-  const { selectedCategories, setSelectedCategories } = props;
-
+export default function Filters({
+  selectedCategories,
+  setSelectedCategories,
+}: FilterProps) {
   const deselectAll = useCallback(() => {
     setSelectedCategories([]);
   }, [setSelectedCategories]);
 
   const isSelected = useCallback(
-    (category: string) => {
-      return selectedCategories.indexOf(category) > -1;
-    },
+    (category: string) => selectedCategories.includes(category),
     [selectedCategories]
   );
 
   const onCheckboxClick = useCallback(
     (category: string) => {
-      if (isSelected(category)) {
-        setSelectedCategories(
-          selectedCategories.filter((cat) => {
-            return cat !== category;
-          })
-        );
-      } else {
-        setSelectedCategories([...selectedCategories, category]);
-      }
+      setSelectedCategories((prevSelected) =>
+        isSelected(category)
+          ? prevSelected.filter((cat) => cat !== category)
+          : [...prevSelected, category]
+      );
     },
-    [isSelected, setSelectedCategories, selectedCategories]
+    [isSelected, setSelectedCategories]
   );
 
   return (
-    <Stack flexDirection="row" flexWrap="wrap">
-      {selectedCategories.map((category: string) => (
-        <Typography
-          key={category.replace(" ", "_")}
-          onClick={() => onCheckboxClick(category)}
-        >
-          {category}
-          <DeleteIcon />
-        </Typography>
-      ))}
-      {selectedCategories.length > 1 && (
-        <Typography onClick={() => deselectAll()}>
-          Deselect All
-          <DeleteIcon />
-        </Typography>
-      )}
-    </Stack>
+    <fieldset>
+      <legend className="visually-hidden">Filter Categories</legend>
+      <Stack flexDirection="row" flexWrap="wrap" className="Filters__Container">
+        {selectedCategories.map((category: string) => (
+          <Typography
+            key={category.replace(" ", "_")}
+            onClick={() => onCheckboxClick(category)}
+            aria-label={`Filter: ${category}`}
+            className="Filters__Category"
+            role="button"
+            tabIndex={0}
+          >
+            {category}
+            <DeleteIcon aria-hidden="true" />
+          </Typography>
+        ))}
+        {selectedCategories.length > 1 && (
+          <Button
+            variant="text"
+            onClick={deselectAll}
+            className="Filters__Button"
+            aria-label="Deselect all filters"
+            color="primary"
+          >
+            Deselect All
+            <DeleteIcon aria-hidden="true" />
+          </Button>
+        )}
+      </Stack>
+    </fieldset>
   );
 }

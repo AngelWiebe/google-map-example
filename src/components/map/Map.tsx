@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useMemo,
+} from "react";
 import GoogleMap from "google-maps-react-markers";
 import { Stack } from "@mui/material";
 
@@ -16,7 +22,7 @@ interface MapProps {
 export default function Map(props: MapProps) {
   const { apiKey, center, setClickedPin, therapistData } = props;
   const [mapLoaded, setMapLoaded] = useState<boolean>(false);
-  const mapRef = useRef<any>(null); // TODO: properly typeset
+  const mapRef = useRef<any>(null);
 
   /**
    * @description This function is called when the map is ready
@@ -35,8 +41,27 @@ export default function Map(props: MapProps) {
     mapRef?.current?.map.setCenter(center);
   }, [center, mapRef]);
 
+  const markers = useMemo(
+    () =>
+      therapistData.map((data, index) => (
+        <Marker
+          count={index + 1}
+          key={`inner-map-pin-${data.id}`}
+          lat={Number(data.lat)}
+          lng={Number(data.lng)}
+          onClick={() => setClickedPin(`card-${data.id}`)}
+        />
+      )),
+    [therapistData, setClickedPin]
+  );
+
   return (
-    <Stack>
+    <Stack
+      maxHeight="100vh"
+      flex="1 1 0px"
+      component="section"
+      aria-labelledby="map-section"
+    >
       <div style={{ height: "100vh", width: "80vh" }}>
         <GoogleMap
           apiKey={apiKey}
@@ -45,15 +70,7 @@ export default function Map(props: MapProps) {
           onGoogleApiLoaded={onGoogleApiLoaded}
           ref={mapRef}
         >
-          {therapistData.map((data: Therapist, index: number) => (
-            <Marker
-              count={index + 1}
-              key={`inner-map-pin-${data.id}`}
-              lat={Number(data.lat)}
-              lng={Number(data.lng)}
-              onClick={() => setClickedPin(`card-${data.id}`)}
-            />
-          ))}
+          {markers}
         </GoogleMap>
       </div>
     </Stack>
