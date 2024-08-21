@@ -1,5 +1,4 @@
 # React + TypeScript + Vite
 
-![image](https://github.com/AngeleNault91/google-map-example/assets/44734300/70472cbb-7a9e-4eab-a43a-4034d3e2f87a)
-
-![image](https://github.com/AngeleNault91/google-map-example/assets/44734300/76276af5-bfef-415a-82e2-867afcb46842)
+![Screen Shot 2024-07-10 at 12 28 06 PM](https://github.com/user-attachments/assets/97c7fc72-2a69-45ea-a878-b865f024c9ff)
+![Screen Shot 2024-07-10 at 11 45 45 AM](https://github.com/user-attachments/assets/681b50ff-406a-4f67-982d-6058c1876d2d)
